@@ -1,0 +1,22 @@
+.App {
+  text-align: center;
+}
+
+.home {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  border: 1px solid red
+}
+
+.blackjack-table {
+  height: 800px;
+  width: 90%;
+  margin: 0 auto;
+  background: url('../assets/images/blackjack.jpeg') no-repeat;
+  position: relative;;
+
+  border: 1px solid black
+}
