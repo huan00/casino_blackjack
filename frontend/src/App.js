@@ -1,6 +1,7 @@
 import './styles/App.css'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
+import theme from './styles/MuiTheme'
 
 function App() {
   return (

@@ -3,20 +3,63 @@
 }
 
 .home {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  border: 1px solid red
+  /* width: 100%; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* border: 1px solid red */
 }
 
 .blackjack-table {
   height: 800px;
-  width: 90%;
+  width: 1020px;
   margin: 0 auto;
   background: url('../assets/images/blackjack.jpeg') no-repeat;
-  position: relative;;
+  position: relative;
 
-  border: 1px solid black
+  border: 1px solid black;
+  transform: translateX();
+}
+
+.player-one {
+  position: absolute;
+  right: 160px;
+  bottom: 260px;
+  transform: rotate(-55deg);
+}
+.player-two {
+  position: absolute;
+  right: 240px;
+  bottom: 170px;
+  transform: rotate(-40deg);
+}
+.player-three {
+  position: absolute;
+  right: 350px;
+  bottom: 110px;
+  transform: rotate(-20deg);
+}
+.player-four {
+  position: absolute;
+  right: 50%;
+  bottom: 90px;
+  transform: translateX(50%);
+}
+.player-five {
+  position: absolute;
+  left: 340px;
+  bottom: 110px;
+  transform: rotate(20deg);
+}
+.player-six {
+  position: absolute;
+  left: 220px;
+  bottom: 170px;
+  transform: rotate(45deg);
+}
+.player-seven {
+  position: absolute;
+  left: 130px;
+  bottom: 270px;
+  transform: rotate(55deg);
 }
