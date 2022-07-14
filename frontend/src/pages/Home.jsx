@@ -1,12 +1,21 @@
 import { Avatar, Box, Chip, Container, Grid } from '@mui/material'
-import React from 'react'
+import { useState } from 'react'
 import '../styles/App.css'
 import Chips from '../components/Chips'
 import cardBack from '../assets/images/card_back.png'
 import king from '../assets/images/king.png'
-import { height } from '@mui/system'
+import { decks, shaffleEight } from '../utilities/Cards'
+import cards from '../utilities/CardRankImage.json'
 
 const Home = () => {
+  const deck = decks()
+  const eightDecksShaffled = shaffleEight(deck)
+  const [shoe, setShoe] = useState(eightDecksShaffled)
+
+  const dealNewHands = () => {}
+
+  console.log(cards)
+
   return (
     <div className="home">
       <Container maxWidth="lg">

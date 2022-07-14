@@ -3,8 +3,6 @@ const decks = () => {
   for (let i = 1; i < 14; i++) {
     for (let j = 1; j < 5; j++) {
       const card = { rank: i, suit: j }
-      // card.rank = i
-      // card.suit = j
       deck.push(card)
     }
   }
@@ -26,8 +24,10 @@ const shaffle = (decks) => {
 }
 
 const shaffleEight = (decks) => {
-  const eightDecks = []
-  eightDecks.fill(decks, 1, 416)
+  let eightDecks = []
+  for (let i = 0; i < 8; i++) {
+    eightDecks = [...eightDecks, ...decks]
+  }
   let currentIndex = eightDecks.length
   let randomIdx
   while (currentIndex != 0) {
@@ -39,7 +39,7 @@ const shaffleEight = (decks) => {
   return eightDecks
 }
 
-exports = {
+module.exports = {
   decks,
   shaffle,
   shaffleEight
