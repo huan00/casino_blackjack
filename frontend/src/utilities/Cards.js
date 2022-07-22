@@ -30,10 +30,12 @@ const shaffleEight = (decks) => {
   }
   let currentIndex = eightDecks.length
   let randomIdx
-  while (currentIndex != 0) {
+  let counter = 1000
+  while (counter != 0) {
     randomIdx = Math.floor(Math.random() * eightDecks.length)
     currentIndex--
     eightDecks.copyWithin(currentIndex, randomIdx)
+    counter--
   }
 
   return eightDecks

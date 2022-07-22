@@ -1,4 +1,4 @@
-import { Avatar, Box, Chip, Container, Grid } from '@mui/material'
+import { Avatar, Box, Chip, Container, Button, Grid } from '@mui/material'
 import { useState } from 'react'
 import '../styles/App.css'
 import Chips from '../components/Chips'
@@ -6,101 +6,115 @@ import cardBack from '../assets/images/card_back.png'
 import king from '../assets/images/king.png'
 import { decks, shaffleEight } from '../utilities/Cards'
 import cards from '../utilities/CardRankImage.json'
+import { PlayerCards, PlayerAvatars, PlayerChips } from '../styles/PlayerCard'
+import PlayerOptions from '../components/PlayerOptions'
+import { flexbox } from '@mui/system'
 
 const Home = () => {
-  const deck = decks()
-  const eightDecksShaffled = shaffleEight(deck)
+  const eightDecksShaffled = shaffleEight(cards.cards)
   const [shoe, setShoe] = useState(eightDecksShaffled)
 
-  const dealNewHands = () => {}
+  const players = [
+    'playerOne',
+    'playerTwo',
+    'playerThree',
+    'playerFour',
+    'playerFive',
+    'playerSix',
+    'playerSeven',
+    'dealer'
+  ]
+  const [numPlayer, setNumPlayer] = useState(8)
+  const [activePlayer, setActivePlayer] = useState(0)
+  const [playOption, setPlayOption] = useState('')
+  const [playerStatus, setPlayerStatus] = useState([
+    { playerOne: true, bet: '', hand: [], busted: false },
+    { playerTwo: true, bet: '', hand: [], busted: false },
+    { playerThree: true, bet: '', hand: [], busted: false },
+    { playerFour: true, bet: '', hand: [], busted: false },
+    { playerFive: true, bet: '', hand: [], busted: false },
+    { playerSix: true, bet: '', hand: [], busted: false },
+    { playerSeven: true, bet: '', hand: [], busted: false },
+    { dealer: true, hand: [], busted: false }
+  ])
 
-  console.log(cards)
+  const dealNewHands = (numPlayer) => {
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < numPlayer; j++) {
+        const card = shoe.pop()
+        setPlayerStatus(
+          (playerStatus) => [...playerStatus],
+          playerStatus[j].hand.push(card)
+        )
+      }
+    }
+    setActivePlayer(0)
+  }
+
+  const startGame = (playOption) => {
+    switch (playOption) {
+      case 'stay':
+        setActivePlayer((activePlayer) => activePlayer + 1)
+        break
+      case 'hit':
+        playerStatus[activePlayer].hand.push(shoe.pop())
+        console.log('hitteed')
+        break
+      default:
+        setActivePlayer((activePlayer) => activePlayer + 1)
+        break
+    }
+  }
+
+  const handlePlayerOption = (option) => {
+    setPlayOption(option)
+    startGame(option, activePlayer)
+    console.log(playerStatus)
+  }
+
+  const hit = (player) => {
+    player.hand.push(shoe.pop())
+  }
+
+  const dealCard = (shoe) => {
+    const temp = [...shoe]
+    const card = temp.pop()
+    setShoe(temp)
+    return card
+  }
 
   return (
     <div className="home">
       <Container maxWidth="lg">
-        <Box className="blackjack-table">
-          <Chip
-            avatar={<Avatar />}
-            label="dealer"
-            color="secondary"
-            variant="outlined"
-            size="large"
-            style={{
+        <Box className="table">
+          <Box className="table-bg"></Box>
+          {/* Avatar */}
+          {players.map((player, idx) => (
+            <Chip
+              key={idx}
+              label={player}
+              avatar={<Avatar />}
+              color="primary"
+              variant="outlined"
+              size="large"
+              style={{ ...PlayerAvatars[player] }}
+            />
+          ))}
+          {/* player options */}
+          <PlayerOptions
+            handlePlayerOption={handlePlayerOption}
+            styles={{
               position: 'absolute',
-              right: '50%',
-              top: 200,
-              transform: 'translateX(50%)'
-            }}
-          />
-          <Chip
-            avatar={<Avatar />}
-            label="player1"
-            color="primary"
-            variant="outlined"
-            size="large"
-            style={{ position: 'absolute', right: 20, bottom: 200 }}
-          />
-          <Chip
-            avatar={<Avatar />}
-            label="player2"
-            color="primary"
-            variant="outlined"
-            size="large"
-            style={{ position: 'absolute', right: 100, bottom: 100 }}
-          />
-          <Chip
-            avatar={<Avatar />}
-            label="player3"
-            color="primary"
-            variant="outlined"
-            size="large"
-            style={{ position: 'absolute', right: 250, bottom: 20 }}
-          />
-          <Chip
-            avatar={<Avatar />}
-            label="player4"
-            color="primary"
-            variant="outlined"
-            size="large"
-            style={{
-              position: 'absolute',
-              right: '50%',
               bottom: 0,
-              transform: 'translateX(50%)'
+              left: '50%',
+              transform: 'translate(-50%)'
             }}
           />
-          <Chip
-            avatar={<Avatar />}
-            label="player5"
-            color="primary"
-            variant="outlined"
-            size="large"
-            style={{ position: 'absolute', left: 250, bottom: 20 }}
-          />
-          <Chip
-            avatar={<Avatar />}
-            label="player6"
-            color="primary"
-            variant="outlined"
-            size="large"
-            style={{ position: 'absolute', left: 100, bottom: 100 }}
-          />
-          <Chip
-            avatar={<Avatar />}
-            label="player7"
-            color="primary"
-            variant="outlined"
-            size="large"
-            style={{ position: 'absolute', left: 20, bottom: 200 }}
-          />
-          <Chips styles={'player-one'} />
-          <Chips styles={'player-two'} />
-          <Chips styles={'player-three'} />
-          <Chips styles={'player-four'} />
-          <Chips styles={'player-five'} />
-          <Chips styles={'player-six'} />
-          <Chips styles={'player-seven'} />
+          {/* player chips */}
+          {players.map((chips) => (
+            <Chips sx={{ ...PlayerChips[chips] }} />
+          ))}
+          {/* player hand */}
           <Box
             sx={{
               backgroundImage: `url(${cardBack})`,
@@ -115,6 +129,7 @@ const Home = () => {
             }}
           />
           <Box
+            onClick={() => dealNewHands(numPlayer)}
             sx={{
               backgroundImage: `url(${cardBack})`,
               backgroundSize: '40px, 40px',
@@ -127,198 +142,30 @@ const Home = () => {
               left: 700
             }}
           />
-          <Box //Dealer card
-            sx={{
-              backgroundImage: `url(${king})`,
-              backgroundSize: '35px, 50px',
-              backgroundRepeat: 'no-repeat',
-              width: 35,
-              height: 50,
 
-              position: 'absolute',
-              top: 400,
-              left: '50%',
-              transform: 'translateX(-50%)'
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${king})`,
-                backgroundSize: '35px, 50px',
-                height: 50,
-                width: 35,
-                ml: 2
-              }}
-            ></Box>
-          </Box>
-          <Box //Player one
-            sx={{
-              backgroundImage: `url(${king})`,
-              backgroundSize: '35px, 50px',
-              backgroundRepeat: 'no-repeat',
-              width: 35,
-              height: 50,
-
-              position: 'absolute',
-              top: 420,
-              left: 723,
-              transform: 'rotate(-53deg)'
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${king})`,
-                backgroundSize: '35px, 50px',
-                height: 50,
-                width: 35,
-                ml: 2
-              }}
-            ></Box>
-          </Box>
-          <Box //Player Two
-            sx={{
-              backgroundImage: `url(${king})`,
-              backgroundSize: '35px, 50px',
-              backgroundRepeat: 'no-repeat',
-              width: 35,
-              height: 50,
-
-              position: 'absolute',
-              top: 490,
-              left: 655,
-              transform: 'rotate(-35deg)'
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${king})`,
-                backgroundSize: '35px, 50px',
-                height: 50,
-                width: 35,
-                ml: 2
-              }}
-            ></Box>
-          </Box>
-          <Box // player-three
-            sx={{
-              backgroundImage: `url(${king})`,
-              backgroundSize: '35px, 50px',
-              backgroundRepeat: 'no-repeat',
-              width: 35,
-              height: 50,
-
-              position: 'absolute',
-              top: 530,
-              left: 570,
-              transform: 'rotate(-17deg)'
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${king})`,
-                backgroundSize: '35px, 50px',
-                height: 50,
-                width: 35,
-                ml: 2
-              }}
-            ></Box>
-          </Box>
-          <Box // player-four
-            sx={{
-              backgroundImage: `url(${king})`,
-              backgroundSize: '35px, 50px',
-              backgroundRepeat: 'no-repeat',
-              width: 35,
-              height: 50,
-
-              position: 'absolute',
-              top: 545,
-              left: 475
-              // transform: 'rotate(-17deg)'
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${king})`,
-                backgroundSize: '35px, 50px',
-                height: 50,
-                width: 35,
-                ml: 2
-              }}
-            ></Box>
-          </Box>
-          <Box // player-five
-            sx={{
-              backgroundImage: `url(${king})`,
-              backgroundSize: '35px, 50px',
-              backgroundRepeat: 'no-repeat',
-              width: 35,
-              height: 50,
-
-              position: 'absolute',
-              top: 526,
-              left: 380,
-              transform: 'rotate(17deg)'
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${king})`,
-                backgroundSize: '35px, 50px',
-                height: 50,
-                width: 35,
-                ml: 2
-              }}
-            ></Box>
-          </Box>
-          <Box // player-six
-            sx={{
-              backgroundImage: `url(${king})`,
-              backgroundSize: '35px, 50px',
-              backgroundRepeat: 'no-repeat',
-              width: 35,
-              height: 50,
-
-              position: 'absolute',
-              top: 485,
-              left: 300,
-              transform: 'rotate(37deg)'
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${king})`,
-                backgroundSize: '35px, 50px',
-                height: 50,
-                width: 35,
-                ml: 2
-              }}
-            ></Box>
-          </Box>
-          <Box // player-seven
-            sx={{
-              backgroundImage: `url(${king})`,
-              backgroundSize: '35px, 50px',
-              backgroundRepeat: 'no-repeat',
-              width: 35,
-              height: 50,
-
-              position: 'absolute',
-              top: 415,
-              left: 235,
-              transform: 'rotate(55deg)'
-            }}
-          >
-            <Box
-              sx={{
-                backgroundImage: `url(${king})`,
-                backgroundSize: '35px, 50px',
-                height: 50,
-                width: 35,
-                ml: 2
-              }}
-            ></Box>
-          </Box>
+          {playerStatus[0].hand[0] &&
+            playerStatus.map((player, idx) => (
+              <Grid
+                container
+                spacing={0}
+                key={idx}
+                sx={{
+                  ...PlayerCards.card,
+                  ...PlayerCards[players[idx]]
+                }}
+              >
+                {player.hand.map((card) => (
+                  <Grid item xs={2}>
+                    <Box
+                      sx={{
+                        ...PlayerCards.cardTwo,
+                        backgroundImage: `url(${card.img})`
+                      }}
+                    ></Box>
+                  </Grid>
+                ))}
+              </Grid>
+            ))}
           {/* Bets */}
           <Chip //player one bets
             label="15"
